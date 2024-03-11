@@ -32,6 +32,8 @@ const en = {
   },
   loginScreen: {
     signIn: "Sign In",
+    welcome: "Welcome Back",
+    welcomeTime: "Welcome back to Finance Go. Have a good time",
     enterDetails:
       "Enter your details below to unlock top secret info. You'll never guess what we've got waiting. Or maybe you will; it's not rocket science here.",
     emailFieldLabel: "Email",
@@ -40,6 +42,8 @@ const en = {
     passwordFieldPlaceholder: "Super secret password here",
     tapToSignIn: "Tap to sign in!",
     hint: "Hint: you can use any email address and your favorite password :)",
+    dontHave: "Don't have an account? ",
+    signUpText: "Sign up",
   },
   demoNavigator: {
     componentsTab: "Components",
