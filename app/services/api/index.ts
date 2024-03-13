@@ -1,2 +1,2 @@
-export * from "./api"
+export * from "./auth/authService"
 export * from "./api.types"
