@@ -8,5 +8,8 @@ export const useLogin = () => {
     onSuccess: () => {
       queryClient.invalidateQueries("userData")
     },
+    onError(error: any) {
+      return error
+    },
   })
 }

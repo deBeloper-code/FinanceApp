@@ -1,6 +1,6 @@
-import { GeneralApiProblem, mapAxiosErrorToGeneralApiProblem } from "../apiProblem"
+import { GeneralApiProblem } from "../apiProblem"
 import clientInstance from "app/services/client/client"
-import axios, { AxiosResponse } from "axios"
+import { AxiosResponse } from "axios"
 
 interface LoginParams {
   email: string
@@ -10,8 +10,8 @@ interface LoginParams {
 export const login = async ({
   email,
   password,
-}: LoginParams): Promise<{ kind: "ok"; data: any } | GeneralApiProblem> => {
-  console.log(email, password, "acaccacaca")
+}: LoginParams): Promise<{ kind: "ok"; token: string } | GeneralApiProblem> => {
+  // eslint-disable-next-line no-useless-catch
   try {
     // Make the API call
     const response: AxiosResponse<any> = await clientInstance.post("/authentication", {
@@ -21,18 +21,9 @@ export const login = async ({
 
     // Transform the data into the format you expect
     const token = response.data
-    console.log(token)
-
-    return { kind: "ok", data: token }
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      const apiProblem = mapAxiosErrorToGeneralApiProblem(error)
-      console.error(apiProblem)
-      throw apiProblem
-    } else {
-      console.error("Error desconocido:", error)
-      // eslint-disable-next-line no-throw-literal
-      throw { kind: "unknown", temporary: true }
-    }
+    // Token
+    return { kind: "ok", token }
+  } catch (error: any) {
+    throw error
   }
 }

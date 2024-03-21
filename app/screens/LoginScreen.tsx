@@ -1,45 +1,61 @@
 import { observer } from "mobx-react-lite"
-import React, { ComponentType, FC, useMemo, useRef, useState } from "react"
+import React, { ComponentType, FC, useEffect, useMemo, useRef, useState } from "react"
 import { TextInput, TextStyle, View, ViewStyle } from "react-native"
 import { Button, Icon, Screen, Text, TextField, TextFieldAccessoryProps } from "../components"
 import { useStores } from "../models"
 import { AppStackScreenProps } from "../navigators"
 import { colors, spacing } from "../theme"
 import { useLogin } from "app/services/hooks/auth"
+import { useForm, Controller } from "react-hook-form"
+import { yupResolver } from "@hookform/resolvers/yup"
+import { schemaLogin } from "app/services/api/auth/authSchema"
+
+type LoginForm = {
+  email: string
+  password: string
+}
 
 interface LoginScreenProps extends AppStackScreenProps<"Login"> {}
 
 export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_props) {
   const authPasswordInput = useRef<TextInput>(null)
-  const [authPassword, setAuthPassword] = useState("")
   const [isAuthPasswordHidden, setIsAuthPasswordHidden] = useState(true)
-  const [isSubmitted, setIsSubmitted] = useState(false)
-  const [attemptsCount, setAttemptsCount] = useState(0)
   const {
-    authenticationStore: { authEmail, setAuthEmail, setAuthToken, validationError },
+    authenticationStore: { setAuthEmail, setAuthToken },
   } = useStores()
-  const { mutate: loginUser } = useLogin()
-  const error = isSubmitted ? validationError : ""
+  const { mutate: loginUser, data, isLoading, isSuccess, error } = useLogin()
 
-  function login() {
-    // setIsSubmitted(true)
-    // setAttemptsCount(attemptsCount + 1)
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<LoginForm>({
+    resolver: yupResolver(schemaLogin),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  })
 
-    // if (validationError) return
-    const loginData = {
-      email: "josue140596@gmail.com",
-      password: "ultra secreto",
+  const login = ({ email, password }: LoginForm) => {
+    setAuthEmail(email)
+    loginUser({
+      email,
+      password,
+    })
+  }
+
+  useEffect(() => {
+    if (isSuccess) {
+      // @ts-ignore
+      setAuthToken(data.token.token)
+      reset()
     }
-    loginUser(loginData)
+  }, [isLoading, data, isSuccess])
 
-    // Make a request to your server to get an authentication token.
-    // If successful, reset the fields and set the token.
-    // setIsSubmitted(false)
-    // setAuthPassword("")
-    // setAuthEmail("")
-
-    // We'll mock this with a fake token.
-    // setAuthToken(String(Date.now()))
+  if (error?.message) {
+    console.log(error?.message?.message, "error from Form")
   }
 
   const PasswordRightAccessory: ComponentType<TextFieldAccessoryProps> = useMemo(
@@ -72,43 +88,64 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
           tx="loginScreen.welcomeTime"
           preset="formLabel"
           style={$welcomeTo}
-          onPress={() => console.log("hey")}
         />
-        <TextField
-          value={authEmail}
-          onChangeText={setAuthEmail}
-          containerStyle={$textField}
-          autoCapitalize="none"
-          autoComplete="email"
-          autoCorrect={false}
-          keyboardType="email-address"
-          labelTx="loginScreen.emailFieldLabel"
-          placeholderTx="loginScreen.emailFieldPlaceholder"
-          helper={error}
-          status={error ? "error" : undefined}
-          onSubmitEditing={() => authPasswordInput.current?.focus()}
+        {/* Fields */}
+        <Controller
+          control={control}
+          rules={{
+            required: false,
+          }}
+          name="email"
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextField
+              value={value}
+              onChangeText={onChange}
+              containerStyle={$textField}
+              autoCapitalize="none"
+              autoComplete="email"
+              autoCorrect={false}
+              keyboardType="email-address"
+              labelTx="loginScreen.emailFieldLabel"
+              placeholderTx="loginScreen.emailFieldPlaceholder"
+              helper={errors.email?.message || error?.message?.message}
+              status={(error?.message?.message || errors.email) && "error"}
+              onBlur={onBlur}
+              onSubmitEditing={() => authPasswordInput.current?.focus()}
+            />
+          )}
         />
-
-        <TextField
-          ref={authPasswordInput}
-          value={authPassword}
-          onChangeText={setAuthPassword}
-          containerStyle={$textField}
-          autoCapitalize="none"
-          autoComplete="password"
-          autoCorrect={false}
-          secureTextEntry={isAuthPasswordHidden}
-          labelTx="loginScreen.passwordFieldLabel"
-          placeholderTx="loginScreen.passwordFieldPlaceholder"
-          onSubmitEditing={login}
-          RightAccessory={PasswordRightAccessory}
+        <Controller
+          control={control}
+          rules={{
+            required: false,
+          }}
+          name="password"
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextField
+              ref={authPasswordInput}
+              value={value}
+              onBlur={onBlur}
+              onChangeText={onChange}
+              containerStyle={$textField}
+              autoCapitalize="none"
+              autoComplete="password"
+              autoCorrect={false}
+              secureTextEntry={isAuthPasswordHidden}
+              labelTx="loginScreen.passwordFieldLabel"
+              placeholderTx="loginScreen.passwordFieldPlaceholder"
+              helper={errors.password?.message}
+              status={(errors.password || error?.message?.message) && "error"}
+              RightAccessory={PasswordRightAccessory}
+              onSubmitEditing={handleSubmit(login)}
+            />
+          )}
         />
         <Button
           testID="login-button"
           tx="loginScreen.signIn"
           style={$tapButton}
           preset="reversed"
-          onPress={login}
+          onPress={handleSubmit(login)}
         />
         <View style={$containerDontHave}>
           <Text

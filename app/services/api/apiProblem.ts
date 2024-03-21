@@ -1,35 +1,41 @@
 import { AxiosError } from "axios"
 
-export type GeneralApiProblem =
-  | { kind: "timeout"; temporary: true }
-  | { kind: "cannot-connect"; temporary: true }
-  | { kind: "server" }
-  | { kind: "unauthorized" }
-  | { kind: "forbidden" }
-  | { kind: "not-found" }
-  | { kind: "rejected" }
-  | { kind: "unknown"; temporary: true }
-  | { kind: "bad-data" }
+export enum ApiProblemKind {
+  Timeout = "timeout",
+  CannotConnect = "cannot-connect",
+  Server = "server",
+  Unauthorized = "unauthorized",
+  Forbidden = "forbidden",
+  NotFound = "not-found",
+  Rejected = "rejected",
+  Unknown = "unknown",
+  BadData = "bad-data",
+}
+export interface GeneralApiProblem {
+  kind: ApiProblemKind
+  message: any
+  temporary?: boolean
+}
 
 export function mapAxiosErrorToGeneralApiProblem(error: AxiosError): GeneralApiProblem {
   if (error.code === "ECONNABORTED") {
-    return { kind: "timeout", temporary: true }
+    return { kind: ApiProblemKind.Timeout, message: {}, temporary: true }
   }
   if (!error.response) {
-    return { kind: "cannot-connect", temporary: true }
+    return { kind: ApiProblemKind.CannotConnect, message: {}, temporary: true }
   }
-  const { status } = error.response
+  const { status, data } = error.response
 
   switch (status) {
     case 401:
-      return { kind: "unauthorized" }
+      return { kind: ApiProblemKind.Unauthorized, message: data }
     case 403:
-      return { kind: "forbidden" }
+      return { kind: ApiProblemKind.Forbidden, message: data }
     case 404:
-      return { kind: "not-found" }
+      return { kind: ApiProblemKind.NotFound, message: data }
     case 500:
-      return { kind: "server" }
+      return { kind: ApiProblemKind.Server, message: data }
     default:
-      return { kind: "rejected" }
+      return { kind: ApiProblemKind.Rejected, message: data }
   }
 }

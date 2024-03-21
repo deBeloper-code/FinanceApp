@@ -31,6 +31,7 @@ import Config from "./config"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { ViewStyle } from "react-native"
 import { QueryClient, QueryClientProvider } from "react-query"
+import Toast from "react-native-toast-message"
 
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
 
@@ -112,6 +113,7 @@ function App(props: AppProps) {
             />
           </GestureHandlerRootView>
         </ErrorBoundary>
+        <Toast />
       </QueryClientProvider>
     </SafeAreaProvider>
   )
