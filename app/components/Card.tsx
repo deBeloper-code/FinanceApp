@@ -1,5 +1,7 @@
 import React, { ComponentType, Fragment, ReactElement } from "react"
 import {
+  ImageBackground,
+  ImageSourcePropType,
   StyleProp,
   TextStyle,
   TouchableOpacity,
@@ -14,6 +16,8 @@ import { Text, TextProps } from "./Text"
 type Presets = keyof typeof $containerPresets
 
 interface CardProps extends TouchableOpacityProps {
+  backgroundImage?: ImageSourcePropType
+  backgroundImageStyle?: StyleProp<TextStyle>
   /**
    * One of the different types of text presets.
    */
@@ -125,6 +129,8 @@ interface CardProps extends TouchableOpacityProps {
  */
 export function Card(props: CardProps) {
   const {
+    backgroundImage,
+    backgroundImageStyle,
     content,
     contentTx,
     contentTxOptions,
@@ -187,7 +193,48 @@ export function Card(props: CardProps) {
     LeftComponent && { marginStart: spacing.md },
     RightComponent && { marginEnd: spacing.md },
   ]
+  const ContentWrapper = (
+    <View style={$alignmentWrapperStyle}>
+      <HeaderContentWrapper>
+        {HeadingComponent ||
+          (isHeadingPresent && (
+            <Text
+              weight="bold"
+              text={heading}
+              tx={headingTx}
+              txOptions={headingTxOptions}
+              {...HeadingTextProps}
+              style={$headingStyle}
+            />
+          ))}
 
+        {ContentComponent ||
+          (isContentPresent && (
+            <Text
+              weight="normal"
+              text={content}
+              tx={contentTx}
+              txOptions={contentTxOptions}
+              {...ContentTextProps}
+              style={$contentStyle}
+            />
+          ))}
+      </HeaderContentWrapper>
+
+      {FooterComponent ||
+        (isFooterPresent && (
+          <Text
+            weight="normal"
+            size="xs"
+            text={footer}
+            tx={footerTx}
+            txOptions={footerTxOptions}
+            {...FooterTextProps}
+            style={$footerStyle}
+          />
+        ))}
+    </View>
+  )
   return (
     <Wrapper
       style={$containerStyle}
@@ -196,48 +243,13 @@ export function Card(props: CardProps) {
       {...WrapperProps}
     >
       {LeftComponent}
-
-      <View style={$alignmentWrapperStyle}>
-        <HeaderContentWrapper>
-          {HeadingComponent ||
-            (isHeadingPresent && (
-              <Text
-                weight="bold"
-                text={heading}
-                tx={headingTx}
-                txOptions={headingTxOptions}
-                {...HeadingTextProps}
-                style={$headingStyle}
-              />
-            ))}
-
-          {ContentComponent ||
-            (isContentPresent && (
-              <Text
-                weight="normal"
-                text={content}
-                tx={contentTx}
-                txOptions={contentTxOptions}
-                {...ContentTextProps}
-                style={$contentStyle}
-              />
-            ))}
-        </HeaderContentWrapper>
-
-        {FooterComponent ||
-          (isFooterPresent && (
-            <Text
-              weight="normal"
-              size="xs"
-              text={footer}
-              tx={footerTx}
-              txOptions={footerTxOptions}
-              {...FooterTextProps}
-              style={$footerStyle}
-            />
-          ))}
-      </View>
-
+      {backgroundImage ? (
+        <ImageBackground source={backgroundImage} style={backgroundImageStyle}>
+          {ContentWrapper}
+        </ImageBackground>
+      ) : (
+        ContentWrapper
+      )}
       {RightComponent}
     </Wrapper>
   )

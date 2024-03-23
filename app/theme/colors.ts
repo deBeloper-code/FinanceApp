@@ -1,6 +1,11 @@
 // TODO: write documentation for colors and palette in own markdown file and add links from here
 
 const palette = {
+  // New palette
+  bgLight: "#ffffff",
+  primaryPr02: "#efefff",
+  iconColorPrimary: "#635bff",
+  // Old palette
   neutral50: "#D9D9D9",
   neutral100: "#FFFFFF",
   neutral200: "#F4F2F1",
@@ -60,7 +65,7 @@ export const colors = {
   /**
    * The default color of the screen background.
    */
-  background: palette.neutral200,
+  background: palette.bgLight,
   /**
    * The default border color.
    */
