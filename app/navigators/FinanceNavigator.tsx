@@ -10,6 +10,7 @@ import { colors, spacing } from "../theme"
 import { AppStackParamList, AppStackScreenProps } from "./AppNavigator"
 import { HomeScreen } from "app/screens/Home/HomeScreen"
 import TabBarItem from "app/components/Molecules/TabBarItem"
+import { IconTypes } from "app/components"
 
 export type FinanceTabParamList = {
   DemoCommunity: undefined
@@ -18,6 +19,7 @@ export type FinanceTabParamList = {
   DemoPodcastList: undefined
   // New Screens
   Home: undefined
+  User: undefined
 }
 
 /**
@@ -55,7 +57,7 @@ export function FinanceNavigator() {
         name="Home"
         component={HomeScreen}
         options={{
-          tabBarIcon: ({ focused }) => <TabBarItem icon={"home"} focused={focused} />,
+          tabBarIcon: ({ focused }) => <TabBarItem icon={IconTypes.Home} focused={focused} />,
         }}
       />
 
@@ -64,7 +66,7 @@ export function FinanceNavigator() {
         component={DemoCommunityScreen}
         options={{
           tabBarLabel: translate("demoNavigator.communityTab"),
-          tabBarIcon: ({ focused }) => <TabBarItem icon={"community"} focused={focused} />,
+          tabBarIcon: ({ focused }) => <TabBarItem icon={IconTypes.Card} focused={focused} />,
         }}
       />
 
@@ -74,7 +76,7 @@ export function FinanceNavigator() {
         options={{
           tabBarAccessibilityLabel: translate("demoNavigator.podcastListTab"),
           tabBarLabel: translate("demoNavigator.podcastListTab"),
-          tabBarIcon: ({ focused }) => <TabBarItem icon={"podcast"} focused={focused} />,
+          tabBarIcon: ({ focused }) => <TabBarItem icon={IconTypes.Stats} focused={focused} />,
         }}
       />
     </Tab.Navigator>

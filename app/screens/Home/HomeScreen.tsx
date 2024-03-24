@@ -1,13 +1,14 @@
 import React, { FC, useMemo } from "react"
 import * as Application from "expo-application"
-import { ImageSourcePropType, ImageStyle, Platform, TextStyle, View, ViewStyle } from "react-native"
+import { ImageSourcePropType, ImageStyle, View, ViewStyle } from "react-native"
 import { FinanceTabScreenProps } from "app/navigators/FinanceNavigator"
 import { useStores } from "app/models"
-import { ListItem, Text, Screen, Button, Card } from "app/components"
+import { Text, Screen, Card, Icon, IconTypes } from "app/components"
 import { colors, spacing } from "app/theme"
 import HeaderUser from "app/components/Molecules/HeaderUser"
 
 const rnrImage1 = require("../../../assets/images/bgLight.png")
+const avatar = require("../../../assets/images/avatar.png")
 
 export const HomeScreen: FC<FinanceTabScreenProps<"Home">> = function HomeScreen(_props) {
   const {
@@ -50,9 +51,16 @@ export const HomeScreen: FC<FinanceTabScreenProps<"Home">> = function HomeScreen
         backgroundImage={imageUri}
         backgroundImageStyle={$bgImageCard}
         style={$cardHeader}
-        HeadingComponent={<HeaderUser userName={""} notification={0} />}
-        // ContentComponent={<Text style={$title} preset="heading" tx="demoDebugScreen.title" />}
-        // FooterComponent={<Text style={$title} preset="heading" tx="demoDebugScreen.title" />}
+        HeadingComponent={<HeaderUser image={avatar} userName={"Zen Al"} notification={1} />}
+        ContentComponent={
+          <View style={$contentBalance}>
+            <View style={$balance}>
+              <Text preset="subheading" tx="demoDebugScreen.title" />
+              <Text preset="heading" text="$ 1,434.34" />
+            </View>
+            <Icon icon={IconTypes.Eye} size={22} />
+          </View>
+        }
       />
       <Card />
     </Screen>
@@ -60,7 +68,6 @@ export const HomeScreen: FC<FinanceTabScreenProps<"Home">> = function HomeScreen
 }
 
 const $container: ViewStyle = {
-  // paddingTop: spacing.lg + spacing.xl,
   paddingBottom: spacing.xxl,
 }
 
@@ -80,5 +87,14 @@ const $cardHeader: ViewStyle = {
 const $bgImageCard: ImageStyle = {
   flex: 1,
   width: 300,
-  height: 300,
+  height: "auto",
+}
+const $contentBalance: ViewStyle = {
+  flexDirection: "row",
+  paddingHorizontal: spacing.lg,
+  alignItems: "center",
+  marginVertical: spacing.xxl,
+}
+const $balance: ViewStyle = {
+  width: "90%",
 }

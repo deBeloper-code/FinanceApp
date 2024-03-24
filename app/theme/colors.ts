@@ -5,6 +5,7 @@ const palette = {
   bgLight: "#ffffff",
   primaryPr02: "#efefff",
   iconColorPrimary: "#635bff",
+  iconColorDefault: "#6d6d6d",
   // Old palette
   neutral50: "#D9D9D9",
   neutral100: "#FFFFFF",

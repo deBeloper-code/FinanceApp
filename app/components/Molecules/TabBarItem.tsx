@@ -1,7 +1,7 @@
 import { View, ViewStyle } from "react-native"
 import React from "react"
 import { Icon, IconTypes } from "../Icon"
-import { colors } from "app/theme"
+import { colors, spacing } from "app/theme"
 
 interface TabBarItemProps {
   /**
@@ -20,7 +20,11 @@ const TabBarItem = (props: TabBarItemProps) => {
   // Render:
   return (
     <View style={$containerTabBar}>
-      <Icon icon={icon} color={focused ? colors.palette.iconColorPrimary : undefined} size={24} />
+      <Icon
+        icon={icon}
+        color={focused ? colors.palette.iconColorPrimary : colors.palette.iconColorDefault}
+        size={18}
+      />
       {focused && <View style={$tabBarFocused} />}
     </View>
   )
@@ -32,10 +36,11 @@ const $containerTabBar: ViewStyle = {
 }
 
 const $tabBarFocused: ViewStyle = {
-  width: 10,
-  height: 5,
+  width: 12,
+  height: 4,
   backgroundColor: colors.palette.iconColorPrimary,
   borderRadius: 16,
+  marginTop: spacing.xs,
 }
 
 export default TabBarItem

@@ -1,32 +1,33 @@
-import { View, ViewStyle, Image, ImageStyle } from "react-native"
+import { View, ViewStyle, Image, ImageStyle, ImageSourcePropType } from "react-native"
 import React from "react"
 import { colors, spacing } from "app/theme"
-import { Icon, Text } from "app/components"
-import { ListItem } from "../ListItem"
+import { Icon, IconTypes, Text } from "app/components"
 
 type HeaderUserProps = {
   userName: string
   notification: number
+  image?: ImageSourcePropType
 }
 
 const HeaderUser = (props: HeaderUserProps) => {
-  const { userName, notification = 1 } = props
+  const { userName, notification, image } = props
   return (
     <View style={$container}>
       {/* User image */}
       <View style={$containerImage}>
         <View style={$contentImage}>
-          <Image style={$image} />
+          <Image source={image} style={$image} />
         </View>
       </View>
       {/* Info */}
       <View style={$info}>
-        <Text preset="bold">Hi, Zen Al</Text>
+        <Text preset="bold">Hi, {userName}</Text>
         <Text>Wed, Feb 14, 2024</Text>
       </View>
       {/* Notification */}
       <View style={$notification}>
-        <Icon icon={"bell"} />
+        <Icon icon={IconTypes.Notification} color={colors.text} />
+        {notification > 0 && <View style={$notificationPending} />}
       </View>
     </View>
   )
@@ -34,11 +35,11 @@ const HeaderUser = (props: HeaderUserProps) => {
 
 const $container: ViewStyle = {
   flexDirection: "row",
-  //   backgroundColor: "red",
   paddingHorizontal: spacing.lg,
-  paddingVertical: spacing.xs,
+  paddingVertical: spacing.lg,
   alignItems: "center",
   justifyContent: "space-between",
+  marginTop: spacing.xs,
 }
 
 const $containerImage: ViewStyle = {
@@ -49,9 +50,12 @@ const $contentImage: ViewStyle = {
   width: 50,
   height: 50,
   borderRadius: 50,
+  overflow: "hidden",
+  justifyContent: "center",
+  alignItems: "center",
 }
 const $image: ImageStyle = {
-  marginBottom: spacing.xxl,
+  marginTop: spacing.xs,
 }
 
 const $notification: ViewStyle = {
@@ -59,6 +63,15 @@ const $notification: ViewStyle = {
 }
 const $info: ViewStyle = {
   width: "70%",
+}
+
+const $notificationPending: ViewStyle = {
+  width: 6,
+  height: 6,
+  backgroundColor: colors.error,
+  borderRadius: 50,
+  position: "absolute",
+  right: 13,
 }
 
 export default HeaderUser

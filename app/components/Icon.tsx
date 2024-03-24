@@ -1,7 +1,6 @@
 import * as React from "react"
-import { ComponentType } from "react"
+import { ComponentType, useMemo } from "react"
 import {
-  Image,
   ImageStyle,
   StyleProp,
   TouchableOpacity,
@@ -10,8 +9,21 @@ import {
   ViewProps,
   ViewStyle,
 } from "react-native"
+import { colors } from "app/theme"
+// Icons
+import Notification from "../../assets/svg/notification.svg"
+import Eye from "../../assets/svg/eye.svg"
+import Home from "../../assets/svg/home.svg"
+import Card from "../../assets/svg/card.svg"
+import Stats from "../../assets/svg/stats.svg"
 
-export type IconTypes = keyof typeof iconRegistry
+export enum IconTypes {
+  Notification = "notification",
+  Eye = "eye",
+  Home = "home",
+  Card = "card",
+  Stats = "stats",
+}
 
 interface IconProps extends TouchableOpacityProps {
   /**
@@ -55,9 +67,8 @@ interface IconProps extends TouchableOpacityProps {
 export function Icon(props: IconProps) {
   const {
     icon,
-    color,
-    size,
-    style: $imageStyleOverride,
+    color = colors.text,
+    size = 20,
     containerStyle: $containerStyleOverride,
     ...WrapperProps
   } = props
@@ -67,12 +78,22 @@ export function Icon(props: IconProps) {
     TouchableOpacityProps | ViewProps
   >
 
-  const $imageStyle: StyleProp<ImageStyle> = [
-    $imageStyleBase,
-    color !== undefined && { tintColor: color },
-    size !== undefined && { width: size, height: size },
-    $imageStyleOverride,
-  ]
+  const iconValueSVG = useMemo(() => {
+    switch (icon) {
+      case "notification":
+        return <Notification width={size} height={size} fill={color} stroke={color} />
+      case "eye":
+        return <Eye width={size} height={size} fill={color} stroke={color} />
+      case "home":
+        return <Home width={size} height={size} fill={color} stroke={color} />
+      case "card":
+        return <Card width={size} height={size} fill={color} stroke={color} />
+      case "stats":
+        return <Stats width={size} height={size} fill={color} stroke={color} />
+      default:
+        return null
+    }
+  }, [icon, color, size])
 
   return (
     <Wrapper
@@ -80,37 +101,7 @@ export function Icon(props: IconProps) {
       {...WrapperProps}
       style={$containerStyleOverride}
     >
-      <Image style={$imageStyle} source={iconRegistry[icon]} />
+      {iconValueSVG}
     </Wrapper>
   )
-}
-
-export const iconRegistry = {
-  home: require("../../assets/icons/home.png"),
-  back: require("../../assets/icons/back.png"),
-  bell: require("../../assets/icons/bell.png"),
-  caretLeft: require("../../assets/icons/caretLeft.png"),
-  caretRight: require("../../assets/icons/caretRight.png"),
-  check: require("../../assets/icons/check.png"),
-  clap: require("../../assets/icons/demo/clap.png"),
-  community: require("../../assets/icons/demo/community.png"),
-  components: require("../../assets/icons/demo/components.png"),
-  debug: require("../../assets/icons/demo/debug.png"),
-  github: require("../../assets/icons/demo/github.png"),
-  heart: require("../../assets/icons/demo/heart.png"),
-  hidden: require("../../assets/icons/hidden.png"),
-  ladybug: require("../../assets/icons/ladybug.png"),
-  lock: require("../../assets/icons/lock.png"),
-  menu: require("../../assets/icons/menu.png"),
-  more: require("../../assets/icons/more.png"),
-  pin: require("../../assets/icons/demo/pin.png"),
-  podcast: require("../../assets/icons/demo/podcast.png"),
-  settings: require("../../assets/icons/settings.png"),
-  slack: require("../../assets/icons/demo/slack.png"),
-  view: require("../../assets/icons/view.png"),
-  x: require("../../assets/icons/x.png"),
-}
-
-const $imageStyleBase: ImageStyle = {
-  resizeMode: "contain",
 }
