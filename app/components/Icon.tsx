@@ -16,6 +16,7 @@ import Eye from "../../assets/svg/eye.svg"
 import Home from "../../assets/svg/home.svg"
 import Card from "../../assets/svg/card.svg"
 import Stats from "../../assets/svg/stats.svg"
+import Pay from "../../assets/svg/pay.svg"
 
 export enum IconTypes {
   Notification = "notification",
@@ -23,6 +24,7 @@ export enum IconTypes {
   Home = "home",
   Card = "card",
   Stats = "stats",
+  Pay = "pay",
 }
 
 interface IconProps extends TouchableOpacityProps {
@@ -90,6 +92,8 @@ export function Icon(props: IconProps) {
         return <Card width={size} height={size} fill={color} stroke={color} />
       case "stats":
         return <Stats width={size} height={size} fill={color} stroke={color} />
+      case "pay":
+        return <Pay width={size} height={size} fill={color} stroke={color} />
       default:
         return null
     }

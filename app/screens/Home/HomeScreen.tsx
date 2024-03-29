@@ -1,11 +1,12 @@
 import React, { FC, useMemo } from "react"
 import * as Application from "expo-application"
-import { ImageSourcePropType, ImageStyle, View, ViewStyle } from "react-native"
+import { ImageSourcePropType, ImageStyle, TextStyle, View, ViewStyle } from "react-native"
 import { FinanceTabScreenProps } from "app/navigators/FinanceNavigator"
 import { useStores } from "app/models"
-import { Text, Screen, Card, Icon, IconTypes } from "app/components"
+import { Text, Screen, Card, Icon, IconTypes, Button } from "app/components"
 import { colors, spacing } from "app/theme"
 import HeaderUser from "app/components/Molecules/HeaderUser"
+import { logoutSession } from "app/services/api"
 
 const rnrImage1 = require("../../../assets/images/bgLight.png")
 const avatar = require("../../../assets/images/avatar.png")
@@ -39,6 +40,11 @@ export const HomeScreen: FC<FinanceTabScreenProps<"Home">> = function HomeScreen
     [],
   )
 
+  const closeSession = () => {
+    logoutSession()
+    logout()
+  }
+
   return (
     <Screen
       StatusBarProps={{ backgroundColor: colors.background }}
@@ -55,14 +61,18 @@ export const HomeScreen: FC<FinanceTabScreenProps<"Home">> = function HomeScreen
         ContentComponent={
           <View style={$contentBalance}>
             <View style={$balance}>
-              <Text preset="subheading" tx="demoDebugScreen.title" />
+              <Text preset="subheading" text="Balance" />
               <Text preset="heading" text="$ 1,434.34" />
             </View>
             <Icon icon={IconTypes.Eye} size={22} />
           </View>
         }
       />
-      <Card />
+      <View style={$containerNoTransactions}>
+        <Text style={$txtNoTransaction} preset="formHelper" text="No transactions" />
+        <Icon size={28} icon={IconTypes.Pay} color={colors.palette.iconColorPrimary} />
+      </View>
+      <Button onPress={closeSession} />
     </Screen>
   )
 }
@@ -97,4 +107,11 @@ const $contentBalance: ViewStyle = {
 }
 const $balance: ViewStyle = {
   width: "90%",
+}
+const $containerNoTransactions: ViewStyle = {
+  alignItems: "center",
+}
+const $txtNoTransaction: TextStyle = {
+  marginTop: spacing.lg,
+  marginBottom: spacing.xs,
 }

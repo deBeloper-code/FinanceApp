@@ -2,6 +2,7 @@ import axios, { AxiosError, AxiosResponse } from "axios"
 import { ApiConfig } from "../api/api.types"
 import Config from "../../config"
 import { mapAxiosErrorToGeneralApiProblem } from "../api/apiProblem"
+import { load } from "app/utils/storage"
 
 export const DEFAULT_API_CONFIG: ApiConfig = {
   url: Config.API_URL,
@@ -14,6 +15,14 @@ const clientInstance = axios.create({
   headers: {
     Accept: "application/json",
   },
+})
+clientInstance.interceptors.request.use(async (config) => {
+  const token = await load("token")
+  console.log(token, "desde el cleinte async")
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
+  return config
 })
 
 clientInstance.interceptors.response.use(
