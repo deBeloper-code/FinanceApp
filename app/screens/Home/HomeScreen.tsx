@@ -7,11 +7,14 @@ import { Text, Screen, Card, Icon, IconTypes, Button } from "app/components"
 import { colors, spacing } from "app/theme"
 import HeaderUser from "app/components/Molecules/HeaderUser"
 import { logoutSession } from "app/services/api"
+// import { useUserGeneralInformation } from "app/services/hooks"
 
 const rnrImage1 = require("../../../assets/images/bgLight.png")
 const avatar = require("../../../assets/images/avatar.png")
 
 export const HomeScreen: FC<FinanceTabScreenProps<"Home">> = function HomeScreen(_props) {
+  // Hooks
+  // const data = useUserGeneralInformation()
   const {
     authenticationStore: { logout },
   } = useStores()
@@ -44,6 +47,7 @@ export const HomeScreen: FC<FinanceTabScreenProps<"Home">> = function HomeScreen
     logoutSession()
     logout()
   }
+  // console.log(data)
 
   return (
     <Screen
