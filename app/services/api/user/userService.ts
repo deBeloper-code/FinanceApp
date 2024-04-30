@@ -1,18 +1,16 @@
-import { GeneralApiProblem } from "../apiProblem"
+import { UserResponse } from "app/models/User/user-model"
 import clientInstance from "app/services/client/client"
 
 import { AxiosResponse } from "axios"
 
-export const getUserInformation = async (): Promise<
-  { kind: "ok"; data: string } | GeneralApiProblem
-> => {
+export const getUserInformation = async (): Promise<UserResponse> => {
   // eslint-disable-next-line no-useless-catch
   try {
     // Make the API call
-    const response: AxiosResponse<any> = await clientInstance.get("/user")
-    console.log(response.data, "User info")
+    const response: AxiosResponse<UserResponse> = await clientInstance.get("/user")
+    // console.log(response.data, "User info")
     // Data user
-    return { kind: "ok", data: "response" }
+    return response.data
   } catch (error: any) {
     throw error
   }

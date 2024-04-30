@@ -18,9 +18,9 @@ const clientInstance = axios.create({
 })
 clientInstance.interceptors.request.use(async (config) => {
   const token = await load("token")
-  console.log(token, "desde el cleinte async")
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`
+  // console.log(token, "desde el cleinte async")
+  if (token.token) {
+    config.headers.Authorization = `Bearer ${token?.token}`
   }
   return config
 })

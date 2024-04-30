@@ -7,14 +7,14 @@ import { Text, Screen, Card, Icon, IconTypes, Button } from "app/components"
 import { colors, spacing } from "app/theme"
 import HeaderUser from "app/components/Molecules/HeaderUser"
 import { logoutSession } from "app/services/api"
-// import { useUserGeneralInformation } from "app/services/hooks"
+import { useUserGeneralInformation } from "app/services/hooks"
 
 const rnrImage1 = require("../../../assets/images/bgLight.png")
 const avatar = require("../../../assets/images/avatar.png")
 
 export const HomeScreen: FC<FinanceTabScreenProps<"Home">> = function HomeScreen(_props) {
   // Hooks
-  // const data = useUserGeneralInformation()
+  const [userInfo, cardInfo] = useUserGeneralInformation()
   const {
     authenticationStore: { logout },
   } = useStores()
@@ -47,7 +47,6 @@ export const HomeScreen: FC<FinanceTabScreenProps<"Home">> = function HomeScreen
     logoutSession()
     logout()
   }
-  // console.log(data)
 
   return (
     <Screen
@@ -61,12 +60,14 @@ export const HomeScreen: FC<FinanceTabScreenProps<"Home">> = function HomeScreen
         backgroundImage={imageUri}
         backgroundImageStyle={$bgImageCard}
         style={$cardHeader}
-        HeadingComponent={<HeaderUser image={avatar} userName={"Zen Al"} notification={1} />}
+        HeadingComponent={
+          <HeaderUser image={avatar} userName={userInfo.data?.name || ""} notification={1} />
+        }
         ContentComponent={
           <View style={$contentBalance}>
             <View style={$balance}>
               <Text preset="subheading" text="Balance" />
-              <Text preset="heading" text="$ 1,434.34" />
+              <Text preset="heading" text={cardInfo?.data[0]?.balance || ""} />
             </View>
             <Icon icon={IconTypes.Eye} size={22} />
           </View>

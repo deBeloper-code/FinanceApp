@@ -6,7 +6,7 @@ import { getUserCards, getUserInformation, getUserTransactions } from "../api"
 export const useUserGeneralInformation = () => {
   return useQueries([
     { queryKey: "user", queryFn: getUserInformation },
-    { queryKey: "transactions", queryFn: getUserTransactions },
     { queryKey: "cards", queryFn: getUserCards },
+    // { queryKey: "transactions", queryFn: getUserTransactions },
   ])
 }
